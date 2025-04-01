@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Main menu item -->
+    <menuitem id="menu_facilitation_root" name="Facilitation" sequence="10"/>
+    
+    <!-- Dashboard menu item -->
+    <menuitem id="menu_facilitation_dashboard" 
+              name="Dashboard" 
+              parent="menu_facilitation_root" 
+              action="facilitation_dashboard.action_facilitation_dashboard" 
+              sequence="1"/>
+              
+    <!-- Sessions menu item -->
+    <menuitem id="menu_facilitation_sessions" 
+              name="Sessions" 
+              parent="menu_facilitation_root" 
+              action="facilitation_dashboard.action_facilitation_sessions" 
+              sequence="2"/>
+              
+    <!-- Participants menu item -->
+    <menuitem id="menu_facilitation_participants" 
+              name="Participants" 
+              parent="menu_facilitation_root" 
+              action="facilitation_dashboard.action_facilitation_participants" 
+              sequence="3"/>
+              
+    <!-- Facilitators menu item -->
+    <menuitem id="menu_facilitation_facilitators" 
+              name="Facilitators" 
+              parent="menu_facilitation_root" 
+              action="facilitation_dashboard.action_facilitators" 
+              sequence="4"/>
+              
+    <!-- Card Decks menu item -->
+    <menuitem id="menu_facilitation_card_decks" 
+              name="Card Decks" 
+              parent="menu_facilitation_root" 
+              action="facilitation_dashboard.action_facilitation_products" 
+              sequence="5"/>
+</odoo>

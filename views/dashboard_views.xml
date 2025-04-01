@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="facilitation_dashboard_view" model="ir.ui.view">
+        <field name="name">facilitation.dashboard.view</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Facilitation Dashboard">
+                <board style="2-1">
+                    <column>
+                        <action string="Sessions by Type" name="%(facilitation_dashboard.action_sessions_by_type)d"/>
+                        <action string="Recent Sessions" name="%(facilitation_dashboard.action_recent_sessions)d"/>
+                    </column>
+                    <column>
+                        <action string="Response Rates" name="%(facilitation_dashboard.action_response_rates)d"/>
+                        <action string="Participants Needing Follow-up" name="%(facilitation_dashboard.action_participants_need_followup)d"/>
+                    </column>
+                </board>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Actions -->
+    <record id="action_sessions_by_type" model="ir.actions.act_window">
+        <field name="name">Sessions by Type</field>
+        <field name="res_model">facilitation.session</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[]</field>
+        <field name="context">{'graph_view_ref': 'facilitation_dashboard.view_facilitation_session_graph'}</field>
+    </record>
+
+    <record id="action_recent_sessions" model="ir.actions.act_window">
+        <field name="name">Recent Sessions</field>
+        <field name="res_model">facilitation.session</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('session_date', '>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+    </record>
+
+    <record id="action_response_rates" model="ir.actions.act_window">
+        <field name="name">Response Rates</field>
+        <field name="res_model">facilitation.session</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[('state', '=', 'completed')]</field>
+        <field name="context">{'graph_measure': 'response_rate', 'group_by': ['session_date:month']}</field>
+    </record>
+
+    <record id="action_participants_need_followup" model="ir.actions.act_window">
+        <field name="name">Participants Needing Follow-up</field>
+        <field name="res_model">facilitation.participant</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('has_responded', '=', True), ('has_followed_up', '=', False)]</field>
+    </record>
+
+    <record id="action_facilitation_dashboard" model="ir.actions.act_window">
+        <field name="name">Facilitation Dashboard</field>
+        <field name="res_model">board.board</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="facilitation_dashboard.facilitation_dashboard_view"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

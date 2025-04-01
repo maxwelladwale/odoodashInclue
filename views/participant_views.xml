@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_facilitation_participant_form" model="ir.ui.view">
+        <field name="name">facilitation.participant.form</field>
+        <field name="model">facilitation.participant</field>
+        <field name="arch" type="xml">
+            <form string="Participant">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Participant Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="team_lead"/>
+                        </group>
+                        <group>
+                            <field name="session_id"/>
+                            <field name="has_responded"/>
+                            <field name="has_followed_up"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Surveys">
+                            <group>
+                                <group string="Pre-Session">
+                                    <field name="pre_survey_id"/>
+                                    <field name="pre_user_input_id" readonly="1"/>
+                                    <button name="action_send_pre_survey" string="Send Pre-Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('email', '=', False), ('pre_survey_id', '=', False)]}"/>
+                                </group>
+                                <group string="Post-Session">
+                                    <field name="post_survey_id"/>
+                                    <field name="post_user_input_id" readonly="1"/>
+                                    <button name="action_send_post_survey" string="Send Post-Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('email', '=', False), ('post_survey_id', '=', False)]}"/>
+                                </group>
+                                <group string="Follow-up">
+                                    <field name="followup_survey_id"/>
+                                    <field name="followup_user_input_id" readonly="1"/>
+                                    <button name="action_send_followup_survey" string="Send Follow-up Survey" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('email', '=', False), ('followup_survey_id', '=', False)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_facilitation_participant_tree" model="ir.ui.view">
+        <field name="name">facilitation.participant.tree</field>
+        <field name="model">facilitation.participant</field>
+        <field name="arch" type="xml">
+            <tree string="Participants" decoration-success="has_responded and has_followed_up" decoration-danger="not has_responded" decoration-warning="has_responded and not has_followed_up">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="team_lead"/>
+                <field name="session_id"/>
+                <field name="has_responded"/>
+                <field name="has_followed_up"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_facilitation_participant_search" model="ir.ui.view">
+        <field name="name">facilitation.participant.search</field>
+        <field name="model">facilitation.participant</field>
+        <field name="arch" type="xml">
+            <search string="Search Participants">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="team_lead"/>
+                <field name="session_id"/>
+                <filter string="Responded" name="responded" domain="[('has_responded', '=', True)]"/>
+                <filter string="Not Responded" name="not_responded" domain="[('has_responded', '=', False)]"/>
+                <filter string="Followed Up" name="followed_up" domain="[('has_followed_up', '=', True)]"/>
+                <filter string="Need Follow-up" name="need_followup" domain="[('has_responded', '=', True), ('has_followed_up', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Session" name="group_by_session" domain="[]" context="{'group_by': 'session_id'}"/>
+                    <filter string="Team Lead" name="group_by_lead" domain="[]" context="{'group_by': 'team_lead'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_facilitation_participants" model="ir.actions.act_window">
+        <field name="name">Participants</field>
+        <field name="res_model">facilitation.participant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

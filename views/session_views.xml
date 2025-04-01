@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_facilitation_session_form" model="ir.ui.view">
+        <field name="name">facilitation.session.form</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <form string="Facilitation Session">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                    <button name="action_complete" string="Mark as Completed" type="object" class="oe_highlight" states="confirmed"/>
+                    <button name="action_cancel" string="Cancel" type="object" states="draft,confirmed"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" states="cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_participants" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="participant_count" widget="statinfo" string="Participants"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Leadership Workshop for ABC Corp"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="facilitator_id" domain="[('is_facilitator', '=', True)]"/>
+                            <field name="facilitator_type" readonly="1"/>
+                            <field name="session_date"/>
+                            <field name="company_name"/>
+                            <field name="team_lead"/>
+                        </group>
+                        <group>
+                            <field name="session_type"/>
+                            <field name="country_id"/>
+                            <field name="language"/>
+                            <field name="participant_count"/>
+                            <field name="qr_code" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Participants">
+                            <field name="participant_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="team_lead"/>
+                                    <field name="has_responded"/>
+                                    <field name="has_followed_up"/>
+                                    <button name="action_send_pre_survey" string="Send Pre-Survey" type="object" icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
+                                    <button name="action_send_post_survey" string="Send Post-Survey" type="object" icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
+                                    <button name="action_send_followup_survey" string="Send Follow-up" type="object" icon="fa-envelope" attrs="{'invisible': [('email', '=', False)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Card Decks">
+                            <field name="card_product_ids" domain="[('is_card_deck', '=', True)]">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="card_deck_type"/>
+                                    <field name="list_price"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sales &amp; Invoicing">
+                            <group>
+                                <field name="sale_order_id"/>
+                                <field name="invoice_status"/>
+                            </group>
+                        </page>
+                        <page string="Metrics">
+                            <group>
+                                <field name="response_rate" widget="progressbar"/>
+                                <field name="follow_up_completion" widget="progressbar"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_facilitation_session_tree" model="ir.ui.view">
+        <field name="name">facilitation.session.tree</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <tree string="Facilitation Sessions" decoration-info="state=='draft'" decoration-success="state=='completed'" decoration-danger="state=='cancelled'" decoration-warning="state=='confirmed'">
+                <field name="name"/>
+                <field name="facilitator_id"/>
+                <field name="facilitator_type"/>
+                <field name="session_date"/>
+                <field name="session_type"/>
+                <field name="company_name"/>
+                <field name="participant_count"/>
+                <field name="response_rate" widget="progressbar"/>
+                <field name="follow_up_completion" widget="progressbar"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_facilitation_session_search" model="ir.ui.view">
+        <field name="name">facilitation.session.search</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <search string="Search Facilitation Sessions">
+                <field name="name"/>
+                <field name="facilitator_id"/>
+                <field name="company_name"/>
+                <field name="team_lead"/>
+                <filter string="My Sessions" name="my_sessions" domain="[('facilitator_id.user_id', '=', uid)]"/>
+                <filter string="Internal Facilitators" name="internal_facilitators" domain="[('facilitator_type', '=', 'internal')]"/>
+                <filter string="External Facilitators" name="external_facilitators" domain="[('facilitator_type', '=', 'external')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Facilitator" name="group_by_facilitator" domain="[]" context="{'group_by': 'facilitator_id'}"/>
+                    <filter string="Session Type" name="group_by_type" domain="[]" context="{'group_by': 'session_type'}"/>
+                    <filter string="Month" name="group_by_month" domain="[]" context="{'group_by': 'session_date:month'}"/>
+                    <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_facilitation_session_calendar" model="ir.ui.view">
+        <field name="name">facilitation.session.calendar</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Facilitation Sessions" date_start="session_date" color="facilitator_id">
+                <field name="name"/>
+                <field name="facilitator_id"/>
+                <field name="company_name"/>
+                <field name="session_type"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_facilitation_session_graph" model="ir.ui.view">
+        <field name="name">facilitation.session.graph</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <graph string="Facilitation Analysis" type="bar">
+                <field name="session_date" type="row" interval="month"/>
+                <field name="session_type" type="row"/>
+                <field name="participant_count" type="measure"/>
+                <field name="response_rate" type="measure"/>
+                <field name="follow_up_completion" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_facilitation_session_pivot" model="ir.ui.view">
+        <field name="name">facilitation.session.pivot</field>
+        <field name="model">facilitation.session</field>
+        <field name="arch" type="xml">
+            <pivot string="Facilitation Analysis">
+                <field name="session_date" type="row" interval="month"/>
+                <field name="facilitator_type" type="col"/>
+                <field name="participant_count" type="measure"/>
+                <field name="response_rate" type="measure"/>
+                <field name="follow_up_completion" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_facilitation_sessions" model="ir.actions.act_window">
+        <field name="name">Sessions</field>
+        <field name="res_model">facilitation.session</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+    </record>
+</odoo>

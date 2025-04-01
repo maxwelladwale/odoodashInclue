@@ -1,0 +1,11 @@
+<odoo>
+    <data noupdate="1">
+        <record id="seq_facilitation_session_qr" model="ir.sequence">
+            <field name="name">Facilitation Session QR Code</field>
+            <field name="code">facilitation.session.qr</field>
+            <field name="prefix">FQRC</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

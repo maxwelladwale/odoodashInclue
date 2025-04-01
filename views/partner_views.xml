@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_facilitation" model="ir.ui.view">
+        <field name="name">res.partner.form.facilitation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Facilitation" attrs="{'invisible': [('is_facilitator', '=', False)]}">
+                    <group>
+                        <field name="facilitator_type" attrs="{'required': [('is_facilitator', '=', True)]}"/>
+                        <field name="facilitation_session_count"/>
+                    </group>
+                    <field name="facilitation_session_ids" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="session_date"/>
+                            <field name="session_type"/>
+                            <field name="company_name"/>
+                            <field name="participant_count"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_facilitator"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_facilitators" model="ir.actions.act_window">
+        <field name="name">Facilitators</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_facilitator', '=', True)]</field>
+        <field name="context">{'default_is_facilitator': True}</field>
+    </record>
+</odoo>

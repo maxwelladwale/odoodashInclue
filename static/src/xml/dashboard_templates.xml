@@ -1,0 +1,58 @@
+<!-- static/src/xml/dashboard_templates.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="facilitation_dashboard.Dashboard">
+        <div class="o_facilitation_dashboard">
+            <div class="o_dashboard_header">
+                <h1>Facilitation Dashboard</h1>
+                <button class="btn btn-primary o_refresh_dashboard">Refresh</button>
+            </div>
+            <div class="o_dashboard_summary"/>
+            <div class="row mt16">
+                <div class="col-md-6">
+                    <div class="o_dashboard_chart">
+                        <h3>Sessions by Month</h3>
+                        <canvas id="sessions_chart"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="o_dashboard_chart">
+                        <h3>Response Rates</h3>
+                        <canvas id="response_rates_chart"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="facilitation_dashboard.Summary">
+        <div class="o_dashboard_summary_content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="o_dashboard_tile bg-primary">
+                        <div class="o_tile_number"><t t-esc="summary.session_count"/></div>
+                        <div class="o_tile_label">Total Sessions</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="o_dashboard_tile bg-success">
+                        <div class="o_tile_number"><t t-esc="summary.internal_count"/></div>
+                        <div class="o_tile_label">Internal Facilitators</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="o_dashboard_tile bg-warning">
+                        <div class="o_tile_number"><t t-esc="summary.external_count"/></div>
+                        <div class="o_tile_label">External Facilitators</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="o_dashboard_tile bg-info">
+                        <div class="o_tile_number"><t t-esc="summary.participant_count"/></div>
+                        <div class="o_tile_label">Total Participants</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
