@@ -1,5 +1,5 @@
 {
-    'name': 'Facilitation Dashboardss',
+    'name': 'Facilitation Dashboards',
     'version': '1.0',
     'category': 'Tools',
     'summary': 'Custom dashboard for tracking facilitation activities',
